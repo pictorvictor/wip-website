@@ -1,122 +1,72 @@
-var pointerX = -1;
-var pointerY = -1;
-var ids = ['gurita','alex','victor','gheorghe',
-'gurita2','alex2','victor2','gheorghe2',
-'gurita3','alex3','victor3','gheorghe3',
-'gurita4','alex4','victor4','gheorghe4'
-]
-const divs = document.querySelectorAll('div')
-var ok 
-var currDiv
-const arr = []
-let centerDAV = wrapper()
-for (let div of divs) {
-    i=0;
-    arr.push(centerDAV(div))
-        div.addEventListener('mouseenter', (e) => {
-            currDiv = Number(e.target.id.slice(7)) - 1
-            ok = 1;
-     
-        })
-        div.addEventListener('mouseleave', () => {
-            ok = 0;
-        })
-    i++
+function findAngle(x1, y1, x2, y2) {
+  let dx = x2 - x1;
+  let dy = y2 - y1;
+  let radians = Math.atan2(dy, dx);
+  if (radians < 0) radians += 2 * Math.PI;
+  let degrees = Math.round((radians * 180) / Math.PI);
+  return degrees;
 }
-function wrapper() {
-    let i = 0;
-    function centerDiv(div) {
-        const rect = div.getBoundingClientRect()
-        const centerX = (rect.left + rect.right) / 2
-        const centerY = (rect.top + rect.bottom) / 2
-        const center = {}
-        center.id = i
-        i++
-        center.centerX = centerX
-        center.centerY = centerY
-        return center
+function findCenterOf(element) {
+  const rect = element.getBoundingClientRect();
+  const centerX = (rect.left + rect.right) / 2;
+  const centerY = (rect.top + rect.bottom) / 2;
+  const center = {};
+  center.centerX = centerX;
+  center.centerY = centerY;
+  return center;
+}
+function segmentCheck(angle) {
+  if (angle < 22.5) return 1;
+  if (angle == 337.5) return 1;
+  let k = 0;
+  let aux = 400;
+  let segmentMiddles = [360, 45, 90, 135, 180, 225, 270, 315];
+  for (let i = 0; i < segmentMiddles.length; i++) {
+    if (Math.abs(angle - segmentMiddles[i]) <= aux) {
+      aux = Math.abs(angle - segmentMiddles[i]);
+      k = i;
     }
-    return centerDiv
+  }
+  return k + 1;
+}
+function miscaFete() {
+  for (let i = 0; i < arrOfCenters.length; i++) {
+    let img = document.querySelector(`.grid-item:nth-of-type(${i + 1}) img`);
+    let angleBetweenMouseAndCenter = findAngle(
+      arrOfCenters[i].centerX,
+      arrOfCenters[i].centerY,
+      pointerX,
+      pointerY
+    );
+    let z = segmentCheck(angleBetweenMouseAndCenter);
+    let x = Math.floor(i / 4);
+    let y = i % 4;
+    if (`${x}${y}` == currContainer) {
+      img.src = `./imgs/${x}${y}9.jpg`;
+    } else {
+      img.src = `./imgs/${x}${y}${z}.jpg`;
+    }
+  }
+}
+let pointerX = -1;
+let pointerY = -1;
+const imgContainers = document.querySelectorAll(".grid-item");
+let currContainer;
+const arrOfCenters = [];
+let intervalID;
+
+for (let imgContainer of imgContainers) {
+  arrOfCenters.push(findCenterOf(imgContainer));
+  imgContainer.addEventListener("mouseenter", (e) => {
+    currContainer = e.target.innerHTML.slice(41, 43);
+  });
+  imgContainer.addEventListener("mouseleave", () => {
+    currContainer = -1;
+  });
 }
 
 document.onmousemove = function (event) {
-    pointerX = event.pageX;
-    pointerY = event.pageY;
-}
-
-function angle(x1, y1, x2, y2) {
-    var dx = x2 - x1
-    var dy = y2 - y1
-    var radians = Math.atan2(dy, dx);
-    if (radians < 0) radians += 2 * Math.PI;
-    var degrees = Math.round(radians * 180 / Math.PI);
-    return degrees
-}
-
-
-setInterval(angleCheck, 1)
-function angleCheck() {
-    let i = 0;
-
-    for (let center of arr) {
-
-        let m = angle(center.centerX, center.centerY, pointerX, pointerY)
-        let imgs = document.getElementsByClassName(`${ids[i]}`)
-            if (ok && i==currDiv ){
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[8].style.display = 'block'
-            }
-            else if (m >= 22.5 && m < 67.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[3].style.display = 'block'
-            } else if (m >= 67.5 && m < 112.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[4].style.display = 'block'
-            }
-            else if (m >= 112.5 && m < 157.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[5].style.display = 'block'
-            }
-            else if (m >= 157.5 && m < 202.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[6].style.display = 'block'
-            }
-            else if (m >= 202.5 && m < 247.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[7].style.display = 'block'
-            }
-            else if (m >= 247.5 && m < 292.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[0].style.display = 'block'
-            }
-            else if (m >= 292.5 && m < 337.5) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[1].style.display = 'block'
-            }
-            else if ((m <= 22.5 && m>0) || (m >= 337.5 && m<360)) {
-                for (let img of imgs) {
-                    img.style.display = 'none'
-                }
-                imgs[2].style.display = 'block'
-            }
-            i++;
-        }
-        
-    }
-
+  pointerX = event.pageX;
+  pointerY = event.pageY;
+  miscaFete()
+};
