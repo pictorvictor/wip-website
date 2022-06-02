@@ -17,22 +17,16 @@ function findCenterOf(element) {
 }
 function segmentCheck(angle) {
   if (22.5 < angle && angle < 337.5) {
-    return Math.round(angle / 45) + 1;
-  } else return 1;
+    return Math.round(angle / 45);
+  } else return 0;
 }
-let i = 0;
-let actualLastZ=9;
-let lastZ=9;
-let z;
-
+let actualLastZ = [8,8,8,8,8,8,8,8];
+let lastZ = [8,8,8,8,8,8,8,8];
+let z = [8,8,8,8,8,8,8,8];
+// let i = 0;
 function miscaFete() {
-  // for (let i = 0; i < arrOfCenters.length; i++) {
-    let currentImg = document.querySelector(
-      `.grid-item:nth-of-type(${i + 1}) img:nth-of-type(1) `
-    );
-    let futureImg = document.querySelector(
-      `.grid-item:nth-of-type(${i + 1}) img:nth-of-type(2) `
-    );
+  for (let i = 0; i < arrOfCenters.length; i++) {
+  let imgs = document.querySelectorAll(`.grid-item:nth-of-type(${i + 1}) img`);
   let angleBetweenMouseAndCenter = findAngle(
     arrOfCenters[i].centerX,
     arrOfCenters[i].centerY,
@@ -41,24 +35,18 @@ function miscaFete() {
   );
   let x = Math.floor(i / 4);
   let y = i % 4;
+  z[i] = segmentCheck(angleBetweenMouseAndCenter);
   if (`${x}${y}` == currContainer) {
-    z = 9;
-  } else z = segmentCheck(angleBetweenMouseAndCenter);
-
-  if (lastZ != z) {
-    actualLastZ = lastZ
-    currentImg.src = `./imgs/${x}${y}${actualLastZ}.jpg`;
-    futureImg.src = `./imgs/${x}${y}${z}.jpg`;
-    currentImg.classList.toggle('show')
-    // setTimeout(() => {
-    //   currentImg.classList.remove('show')
-    // }, 500);
+    z[i] = 8;
   }
+  if (lastZ[i] != z[i]) {
 
-  lastZ = z;
-
-  console.log(`${z}     ${lastZ}    ${actualLastZ}`)
-  // }
+    imgs[lastZ[i]].classList.remove("show");
+    imgs[z[i]].classList.add("show");
+    actualLastZ[i] = lastZ[i];
+  }
+  lastZ[i] = z[i];
+  }
 }
 let pointerX = -1;
 let pointerY = -1;

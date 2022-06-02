@@ -1,5 +1,5 @@
 :root{
-    --transition-duration: 1000ms;
+    --transition-duration: 120ms; /* transition de pe poza care dispare */
 }
 img{
     max-width: 200px;
@@ -11,23 +11,25 @@ img{
     height:200px;
 }
 .grid-container{
+    position:relative;
+    left: 500px;
+    top:250px;
     max-width:800px;
     display:grid;
     grid-template-columns: repeat(4,1fr);
     grid-template-rows: repeat(4,1fr);
 }
 .grid-container img{
+    opacity: 0;
     position:absolute;
-    -webkit-transition: opacity var(--transition-duration) ease-in-out;
-    -moz-transition: opacity var(--transition-duration) ease-in-out;
-    -o-transition: opacity var(--transition-duration) ease-in-out;
+    /* -webkit-transition: opacity var(--transition-duration) ease-out;
+    -moz-transition: opacity var(--transition-duration) ease-out;
+    -o-transition: opacity var(--transition-duration) ease-out; */
     transition: opacity var(--transition-duration) ease-in-out;
 }
-
-.transparent {
-    opacity: 0;
-}
-/* .show {
+img.show {
     opacity:1;
+    --transition-duration: 20ms; /* transition de pe poza care apare */
+}
 
-} */
+/* cand show-ul se muta pe o poza care se afla sub poza de pe care dispare show, nu se realizeaza tranzitia */
